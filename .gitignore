@@ -7,3 +7,5 @@ static_root/
 trac-creds.txt
 .epio-app
 .DS_Store
+venv
+.idea
