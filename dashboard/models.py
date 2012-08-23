@@ -248,14 +248,11 @@ class TrelloBoardCardCount(TrelloBoardMetric):
         return "https://trello.com/board/" + self.board_id
 
     def fetch(self):
-        url = "https://api.trello.com/1/boards/%s/lists?cards=visible"\
+        url = "https://api.trello.com/1/boards/%s/cards?fields=name"\
             % self.board_id
         url = self._append_auth_to_url(url)
         res = requests.get(url)
-        card_count = 0
-        for board_list in res.json:
-            card_count += len(board_list['cards'])
-        return card_count
+        return len(res.json)
 
 class TrelloListCardCount(TrelloBoardMetric):
     """
@@ -270,11 +267,11 @@ class TrelloListCardCount(TrelloBoardMetric):
             return "https://trello.com/board/%s" % self.board_id
 
     def fetch(self):
-        url = "https://api.trello.com/1/lists/%s?card_fields=name&cards=visible"\
+        url = "https://api.trello.com/1/lists/%s/cards?fields=name"\
         % self.list_id
         url = self._append_auth_to_url(url)
         res = requests.get(url)
-        return len(res.json['cards'])
+        return len(res.json)
 
 class Datum(models.Model):
     metric = GenericForeignKey()
