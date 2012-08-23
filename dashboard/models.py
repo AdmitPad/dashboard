@@ -222,6 +222,60 @@ class JenkinsFailuresMetric(Metric):
     def link(self):
         return self.urljoin(self.jenkins_root_url, 'job', self.build_name)
 
+class TrelloBoardMetric(Metric):
+    """
+    base for integrating with trello
+    """
+
+    class Meta:
+        abstract = True
+
+    def _append_auth_to_url(self, url):
+        """
+        helper to append key and token for auth
+        """
+        return url + "&key=%s&token=%s"\
+        % (settings.TRELLO_KEY, settings.TRELLO_TOKEN)
+
+class TrelloBoardCardCount(TrelloBoardMetric):
+    """
+    returns the number of cards in a board
+    """
+
+    board_id = models.CharField(max_length=255, null=True)
+
+    def link(self):
+        return "https://trello.com/board/" + self.board_id
+
+    def fetch(self):
+        url = "https://api.trello.com/1/boards/%s/lists?cards=open"\
+            % self.board_id
+        url = self._append_auth_to_url(url)
+        res = requests.get(url)
+        card_count = 0
+        for board_list in res.json:
+            card_count += len(board_list['cards'])
+        return card_count
+
+class TrelloListCardCount(TrelloBoardMetric):
+    """
+    returns the number of cards in a list
+    """
+
+    board_id = models.CharField(max_length=255, null=True, help_text="used for link to the board")
+    list_id = models.CharField(max_length=255, null=True)
+
+    def link(self):
+        if self.board_id:
+            return "https://trello.com/board/%s" % self.board_id
+
+    def fetch(self):
+        url = "https://api.trello.com/1/lists/%s?card_fields=name&cards=open"\
+        % self.list_id
+        url = self._append_auth_to_url(url)
+        res = requests.get(url)
+        return len(res.json['cards'])
+
 class Datum(models.Model):
     metric = GenericForeignKey()
     content_type = models.ForeignKey(ContentType, related_name='+')

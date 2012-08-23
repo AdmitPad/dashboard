@@ -10,6 +10,9 @@ PROJECT_DIR = Path(__file__).absolute().ancestor(3)
 GITHUB_USERNAME = os.environ.get('GITHUB_USERNAME')
 GITHUB_PASSWORD = os.environ.get('GITHUB_PASSWORD')
 
+TRELLO_KEY = os.environ.get('TRELLO_KEY')
+TRELLO_TOKEN = os.environ.get('TRELLO_TOKEN')
+
 TRAC_CREDS = os.environ.get('TRAC_CREDS')  # Set to "user:pass" for Trac.
 TRAC_RPC_URL = "https://%s@code.djangoproject.com/login/rpc" % TRAC_CREDS
 TRAC_URL = "https://code.djangoproject.com/"
