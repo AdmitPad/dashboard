@@ -11,4 +11,5 @@ boto==2.3.0
 raven==1.7.2
 django-secure==0.1.2
 requests==0.13.0
+django-openid-auth==0.4
 python-openid==2.2.5
