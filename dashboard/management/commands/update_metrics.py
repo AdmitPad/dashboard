@@ -7,7 +7,7 @@ class Command(NoArgsCommand):
     
     def handle_noargs(self, **options):
         verbose = int(options.get('verbosity', 0))
-        for MC in Metric.__subclasses__():
+        for MC in Metric.subclasses_for_display():
             for metric in MC.objects.all():
                 if verbose:
                     print("Updating %s ... " % metric.name.lower(), end="")

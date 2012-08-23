@@ -14,7 +14,7 @@ TEN_MINUTES = 60 * 10
 @cache_page(TEN_MINUTES)
 def index(request):
     metrics = []
-    for MC in Metric.__subclasses__():
+    for MC in Metric.subclasses_for_display():
         metrics.extend(MC.objects.filter(show_on_dashboard=True))
     metrics = sorted(metrics, key=operator.attrgetter('name'))
 
@@ -51,7 +51,7 @@ def metric_json(request, metric_slug):
     )
 
 def _find_metric(slug):
-    for MC in Metric.__subclasses__():
+    for MC in Metric.subclasses_for_display():
         try:
             return MC.objects.get(slug=slug)
         except MC.DoesNotExist:

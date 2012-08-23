@@ -92,6 +92,22 @@ class Metric(models.Model):
                      GROUP BY 1;''', [period, OFFSET, ctid, self.id, since])
         return [(calendar.timegm(t.timetuple()), float(m)) for (t, m) in c.fetchall()]
 
+    @staticmethod
+    def subclasses_for_display(class_reference=None):
+        """
+        returns a list of the subclasses derived from this top level class
+        helper for listing all objects
+        """
+        if class_reference == None:
+            class_reference = Metric
+        subclasses = []
+        for subclass in class_reference.__subclasses__():
+            if subclass._meta.abstract:
+                subclasses += subclass.subclasses_for_display(subclass)
+            else:
+                subclasses.append(subclass)
+        return subclasses
+
 class TracTicketMetric(Metric):
     query = models.TextField()
 

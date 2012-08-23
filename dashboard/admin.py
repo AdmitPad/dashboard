@@ -8,7 +8,7 @@ class MetricAdmin(admin.ModelAdmin):
     list_editable = ('show_on_dashboard', 'show_sparkline', 'period')
     prepopulated_fields = {'slug': ['name']}
 
-for MC in Metric.__subclasses__():
+for MC in Metric.subclasses_for_display():
     admin.site.register(MC, MetricAdmin)
 
 admin.site.register(Datum, 
