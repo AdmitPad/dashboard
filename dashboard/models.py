@@ -144,9 +144,15 @@ class GithubItemCountMetric(Metric):
         count = 0
         page = 1
         while True:
-            r = requests.get(self.api_url, params={
-                'page': page, 'per_page': 100
-            })
+            params = {'page': page, 'per_page': 100}
+            if settings.GITHUB_USERNAME:
+                r = requests.get(self.api_url, params=params,
+                                 auth=(settings.GITHUB_USERNAME,
+                                       settings.GITHUB_PASSWORD))
+            else:
+                r = requests.get(self.api_url, params=params)
+            if r.status_code != 200:
+                raise Exception(r)
             c = len(r.json)
             count += c
             page += 1
