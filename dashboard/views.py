@@ -7,12 +7,17 @@ from django.shortcuts import render
 from django.utils import simplejson
 from django.forms.models import model_to_dict
 from django.views.decorators.cache import cache_page
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 from .models import Metric
 
 TEN_MINUTES = 60 * 10
 
+@login_required
 @cache_page(TEN_MINUTES)
 def index(request):
+    if not request.user.email.endswith("matchbox.net"):
+        return HttpResponse("you are not a matchbox person")
     metrics = []
     for MC in Metric.subclasses_for_display():
         metrics.extend(MC.objects.filter(show_on_dashboard=True))
