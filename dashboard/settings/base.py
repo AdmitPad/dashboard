@@ -17,6 +17,20 @@ TRAC_CREDS = os.environ.get('TRAC_CREDS')  # Set to "user:pass" for Trac.
 TRAC_RPC_URL = "https://%s@code.djangoproject.com/login/rpc" % TRAC_CREDS
 TRAC_URL = "https://code.djangoproject.com/"
 
+
+#
+# openid auth settings
+#
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'auth.GoogleBackend',
+)
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_URL = '/logout/'
+OPENID_SSO_SERVER_URL = 'https://www.google.com/accounts/o8/id'
+
 #
 # Django settings follow...
 #
@@ -84,6 +98,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'south',
+    'django_openid_auth',
     'dashboard',
 ]
 
